@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.crm.mapper.ModuleMapper">
+
+    <select id="selectByRoleId" resultType="com.example.crm.entity.Module">
+        select module.moduleid, modulename, top, url, enable
+        from module
+            join role_module as rm on rm.moduleid = module.moduleid
+            join role on rm.roleid = role.roleid
+            where rm.roleid = #{roleid}
+    </select>
+</mapper>

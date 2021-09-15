@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.crm.mapper.EmpMapper">
+
+    <resultMap id="empvo" type="com.example.crm.vo.EmpVo">
+        <id property="empid" column="empid"/>
+        <result property="status" column="empstatus"/>
+        <association property="dept" javaType="com.example.crm.entity.Dept">
+            <id column="deptid" property="deptid"/>
+        </association>
+        <association property="position" javaType="com.example.crm.entity.Position">
+            <id column="positionid" property="positionid"/>
+        </association>
+        <collection property="roles" ofType="com.example.crm.entity.Role">
+            <id column="roleid" property="roleid"/>
+            <result column="rolestatus" property="status"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectOneEmpVo" resultMap="empvo">
+        SELECT emp.empid,emp.ename,emp.logname,emp.phone,emp.pwd,emp.email,emp.sex,emp.status as empstatus,emp.createtime,
+               dept.deptid ,dept.deptname,dept.enable,dept.superior,dept.top,
+               role.roleid, role.rname, role.description, role.status as rolestatus,
+               position.positionid, position.pname
+        from emp
+                 left JOIN dept_emp_position as dep on emp.empid = dep.empid
+                 LEFT JOIN dept on dep.deptid = dept.deptid
+                 LEFT JOIN position on dep.positionid = position.positionid
+                 LEFT JOIN emp_role as er on emp.empid = er.empid
+                 LEFT JOIN role on er.roleid = role.roleid
+            where logname = #{logname} and pwd = #{pwd}
+    </select>
+    <select id="selectAllEmpVo" resultMap="empvo">
+        SELECT emp.empid,emp.ename,emp.logname,emp.phone,emp.pwd,emp.email,emp.sex,emp.status as empstatus,emp.createtime,
+               dept.deptid ,dept.deptname,dept.enable,dept.superior,dept.top,
+               role.roleid, role.rname, role.description, role.status as rolestatus,
+               position.positionid, position.pname
+        from emp
+                 left JOIN dept_emp_position as dep on emp.empid = dep.empid
+                 LEFT JOIN dept on dep.deptid = dept.deptid
+                 LEFT JOIN position on dep.positionid = position.positionid
+                 LEFT JOIN emp_role as er on emp.empid = er.empid
+                 LEFT JOIN role on er.roleid = role.roleid
+        limit #{pageStart} , #{pageEnd}
+    </select>
+    <select id="selectAllEmpVoPage" resultMap="empvo">
+        SELECT emp.empid,emp.ename,emp.logname,emp.phone,emp.pwd,emp.email,emp.sex,emp.status as empstatus,emp.createtime,
+               dept.deptid ,dept.deptname,dept.enable,dept.superior,dept.top,
+               role.roleid, role.rname, role.description, role.status as rolestatus,
+               position.positionid, position.pname
+        from emp
+                 left JOIN dept_emp_position as dep on emp.empid = dep.empid
+                 LEFT JOIN dept on dep.deptid = dept.deptid
+                 LEFT JOIN position on dep.positionid = position.positionid
+                 LEFT JOIN emp_role as er on emp.empid = er.empid
+                 LEFT JOIN role on er.roleid = role.roleid
+        <if test="ew.emptyOfWhere == false">
+            ${ew.CustomSqlSegment}
+        </if>
+    </select>
+</mapper>

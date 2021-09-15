@@ -1,0 +1,40 @@
+spring:
+  cache:
+    type: redis
+  datasource:
+    username: root
+    password: 6797779
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/crm?characterEncoding=UTF-8&useSSL=false
+    druid:
+      web-stat-filter:
+        enabled: false
+      filters: slf4j
+      filter:
+        slf4j:
+          enabled: true
+          statement-log-enabled: true
+      #   数据源基本配置
+      db-type: com.alibaba.druid.pool.DruidDataSource
+  redis:
+    host: 192.168.79.128
+    port: 6379
+    password:
+    jedis:
+      pool:
+        max-active: 200       # 连接池最大连接数（使用负值表示没有限制）
+        max-idle: 10          # 连接池中的最大空闲连接
+        max-wait: -1          # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        min-idle: 0           # 连接池中的最小空闲连接
+        time-between-eviction-runs: 5000
+    database: 0
+    timeout: 5000
+    client-type: jedis
+
+
+mybatis-plus:
+  mapper-locations: classpath*:/com/example/crm/mapper/*.xml
+  type-aliases-package: com.example.crm.model
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    auto-mapping-behavior: full
